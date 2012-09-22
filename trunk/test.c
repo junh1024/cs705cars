@@ -16,5 +16,5 @@ int main (int argc, char* argv[])
 		fclose(iFile);
 	fclose(oFile);
 	return 0;
-	// printf("hello world");
+	// printf("hello world get fucked and die");
 }
