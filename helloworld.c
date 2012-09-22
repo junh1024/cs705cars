@@ -1,8 +1,9 @@
-//new changes here
-sdfgsdfgsdfg
+/* Hello World program */
 
-//more changes
-fghjfghfgjh
+#include<stdio.h>
 
+main()
+{
+    printf("Hello World\n\n");
 
-//devin makes new code over here
+}
