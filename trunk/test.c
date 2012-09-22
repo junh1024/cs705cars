@@ -1,5 +1,6 @@
 #include <stdio.h>
 //allocate huge array
+//some new stuff here addded by Devin
 FILE * iFile, * oFile;
 
 int main (int argc, char* argv[])
