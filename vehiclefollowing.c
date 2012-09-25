@@ -29,37 +29,30 @@ void main() {
 		//(check that other cars are some distance away before making more)
 	
 
-	/* move all cars
-     * THIS IS NOT CALLED BY US
-     * CALLED BY VTL PEOPLE. WILL LOOK SOMETHING LIKE THIS
-	*/
+	/* move all cars */
 	int i = 0;
 	for (i < actual_num_of_cars; i++)
 	{
-		process_VTL(/* VTL signals */, all_cars[i])
-	}
-
-
-}
-
-void process_VTL(int stop, int go, int slow, car current_car) {
-	//figure out what to do
-	//there may not be *ANY* signals here. we might not be near an intersection
-	move_one_car(1, car current_car); //always go
-}
-
-
-void move_one_car(int operate, car current_car) {
-	//follow the model that we choose
-	if (!operate) {
-		//decelerate
-	}
-	else {
-		//run car following model
+		move_one_car(all_cars[i]);
 	}
 }
-		
 
+void move_one_car(Car current_car) {
+	//move car forward in the direction it was travellening at the speed it was travelling
+}
 
-
+/**
+ * This function determines which car is the next car in front
+ */
+void determine_car_in_front(Car current_car) {
+	//get your own current lane
+	//if lane is horizontal then get current position (x co-ord only)
+	//if lane is vertical then get current position (y co-ord only)
+	
+	//search array of cars.
+	//get cars in your lane only
+	//look for x (or y) co-ords of all other cars in your lane
+	//choose car with closest x or y  co-ord
+	//if search turns up nothing then set next car dist to infinity
+}
 
