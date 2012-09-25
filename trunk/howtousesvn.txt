@@ -1,0 +1,8 @@
+>svn checkout https://cs705cars.googlecode.com/svn/trunk/ cs705cars --username devinbarry@gmail.com
+
+>svn update
+
+>svn ci -m "your comment here"
+
+>svn add globals.h
+
