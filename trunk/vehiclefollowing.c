@@ -1,40 +1,9 @@
 //This file is the main file for vehicle folloiwng
 
-#define MAX_CARS 100
-#define NUM_OF_LANES 1 //Start by getting this to work on a single lane
+#include globals.h
 
-int actual_num_of_cars = 5;
 int MAP_X_MAX = 1000;
 int MAP_Y_MAX = 1000;
-
-//This structs describes the positions of a lane
-//It includes the start and end of each lane
-//A horizontal lane will have identical y co-ords
-//A vertical lane will have identical x co-ords
-//this is somewhat inefficient
-typedef struct {
-	int direction;
-	int postion_x_start;
-	int postion_x_end;
-	int postion_y_start;
-	int postion_y_end;
-} lane;
-
-lane all_lanes[NUM_OF_LANES]
-
-typedef struct {
-	int speed;
-	int posx;
-	int posy;
-	int direction;
-	char * platenumber;
-	int VTL_stop;
-	int VTL_slow;
-	int VTL_go;
- //possibly flags?
-} car;
-
-car all_cars[MAX_CARS]; //this array contains all the cars in the simulation
 
 void init()
 {
