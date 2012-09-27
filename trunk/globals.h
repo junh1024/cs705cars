@@ -38,6 +38,13 @@ typedef struct Car {
     int invisible; //This is a boolean value and it sets the car to be dimenionless/invisible. This is used instead of the leader car to stop other cars
 } Car;
 
+typedef struct CarLane {
+    Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array??
+    int start_index;
+    int end_index;
+    int lane_id;
+}
+
 typedef struct Intersection {
     Point origin;
     float width;
@@ -58,12 +65,12 @@ typedef struct Lane {
 } Lane;
 
 
-#define MAX_CARS 100 //Entire array of cars is statically allocated
-#define NUM_OF_LANES 4
+#define MAX_CARS_PER_LANE 100 //Entire array of cars is statically allocated
+#define NUM_OF_LANES 8
 
 Lane all_lanes[NUM_OF_LANES]; //all lanes in the simulation. Used to determine where to spawn cars and where to destroy them and how many to spawn
+CarLane all_cars[NUM_OF_LANES]; //this array contains all the lane of cars in the simulation
 
-Car all_cars[MAX_CARS]; //this array contains all the cars in the simulation
 int actual_num_of_cars = 0; //This is how many cars are currently in the simulation
 
 const float CAR_LENGTH = 40;
