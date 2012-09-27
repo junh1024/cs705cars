@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h> //allows using bool, true and false
 
 typedef enum Direction {
     UP,
@@ -14,6 +15,12 @@ typedef enum Direction {
     EW = LEFT,  // East to west
     WE = RIGHT  // West to east
 } Direction;
+
+typedef enum TurnDirection {
+    LEFT,
+    RIGHT,
+    STRAIGHT
+} TurnDirection;
 
 typedef struct Point {
     float x;
@@ -30,18 +37,28 @@ typedef struct Point {
  */
 typedef struct Car {
     Point location;
-    Direction direction;
     int speed; //km/h
     char * plate; //This is the cars ID number or licence plate
-    int red; //this is a boolean and it tells the current car that the light for the intersection that it is approaching is red
-    int orange; //this is a boolean and it tells the current car that the light for the intersection that it is approaching is orange
-    int invisible; //This is a boolean value and it sets the car to be dimenionless/invisible. This is used instead of the leader car to stop other cars
+    bool red; //tells the current car that the light for the intersection that it is approaching is red
+    bool orange; //tells the current car that the light for the intersection that it is approaching is orange
+    bool invisible; //sets the car to be dimenionless/invisible. This is used instead of the leader car to stop other cars
+    TurnDirection turn_direction;
 } Car;
 
+/**
+ * All cars are associated with a lane. Lanes have direction.
+ * Cars in a lane will always be travelling in the direction of the lane
+ * Presently there is only one intersection in the simulation
+ * Thus there are only 8 possible lanes.
+ * Each lane has an ID number assigned as per <document>
+ * The car at the "front" of the lane ie. closest to the next intersection is at start_index
+ * The last car in the queue of cars on this lane is at end_index
+ */
 typedef struct CarLane {
     Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array??
     int start_index;
     int end_index;
+    Direction direction;
     int lane_id;
 }
 
