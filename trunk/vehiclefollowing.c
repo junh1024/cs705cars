@@ -5,6 +5,9 @@
 int MAP_X_MAX = 1000;
 int MAP_Y_MAX = 1000;
 
+int ACCEL = 5; //km/h/tick
+int DECEL = 5; //km/h/tick
+
 void init()
 {
 	//read input file here.
@@ -37,7 +40,7 @@ void main() {
 	}
 }
 
-void move_one_car(Car current_car) {
+void update_car_lane(CarLane current_car_lane) {
 	//move car forward in the direction it was travellening at the speed it was travelling
 }
 
