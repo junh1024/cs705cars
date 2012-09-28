@@ -8,6 +8,9 @@ float car2pos=-20;
 int car1speed=0;
 int car2speed=0;
 
+int ACCEL = 5; //km/h/tick
+int DECEL = 15; //km/h/tick
+
 float anumber;
 
 int i=0;
@@ -26,11 +29,11 @@ int main (int argc, char* argv[])
 		car1pos=anumber;
 		if(fabs(car2pos-car1pos )< 7)//smaller than 7 meters abs distace to car1
 		{				
-			car2speed=-15; //slow down
+			car2speed=-DECEL; //slow down
 		}
 		else
 		{
-			car2speed+=5;//speed up
+			car2speed+=ACCEL;//speed up
 		}
 			
 		if(car2speed<0) //can't have negative speed
