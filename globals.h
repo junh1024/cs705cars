@@ -53,6 +53,10 @@ typedef struct Car {
 	TurnIntention turn_intention;
 } Car;
 
+#define increment(i) (++i % MAX_CARS_PER_LANE)
+#define compare(i, start, end) (i < end) || (i > start && start > end)
+#define foreach_car(i, start, end) for(i = start; (i < end) || ((i >= start) && (start > end)); i = (i+1) % MAX_CARS_PER_LANE)
+
 /**
  * All cars are associated with a lane. Lanes have direction.
  * Cars in a lane will always be travelling in the direction of the lane
@@ -63,9 +67,10 @@ typedef struct Car {
  * The last car in the queue of cars on this lane is at end_index
  */
 typedef struct LaneOfCars {
-    Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array??
+    Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array
     int start_index;
     int end_index;
+	int count; //the actual number of cars in this lane
     Direction direction;
     int lane_id;
 } LaneOfCars;
@@ -82,7 +87,7 @@ typedef struct Intersection {
  * A vertical lane will have identical x co-ords
  */
 typedef struct Lane {
-	int laneID;
+	int lane_id;
 	Direction direction;
 	Point start_pos;
 	Point end_pos;

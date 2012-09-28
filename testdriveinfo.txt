@@ -24,3 +24,10 @@ Lane ID 2                                                        Lane ID 4
                                 |       |
                      Lane ID 7  |       |  Lane ID 8
 
+
+
+LaneOfCars has an array of cars inside which is circular
+There cannot be more than MAX_CARS_PER_LANE in this array or else all the logic will break.
+end_index points at the next "free" slot, not the last full element
+start_index points to the first used slot in the array
+
