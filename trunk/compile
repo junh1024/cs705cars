@@ -1,0 +1,1 @@
+gcc -Wall -I. -std=c99 -g testdrive.c -o testdrive
