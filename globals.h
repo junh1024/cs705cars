@@ -5,7 +5,12 @@
 #include <stdlib.h>
 #include <stdbool.h> //allows using bool, true and false
 
-typedef enum Direction {
+
+#define MAX_CARS_PER_LANE 100 //Entire array of cars is statically allocated
+#define NUM_OF_LANES 8
+
+
+typedef enum Direction{
     UP,
     DOWN,
     LEFT,
@@ -16,11 +21,11 @@ typedef enum Direction {
     WE = RIGHT  // West to east
 } Direction;
 
-typedef enum TurnDirection {
-    LEFT,
-    RIGHT,
+typedef enum TurnIntention {
+    LEFT_TURN,
+    RIGHT_RIGHT,
     STRAIGHT
-} TurnDirection;
+} TurnIntention;
 
 typedef struct Point {
     float x;
@@ -30,10 +35,13 @@ typedef struct Point {
 /**
  * This structure represents a single car in the simulation
  * Each car has its own signals for red and orange internally.
- * VTL group will turn red or orange on as appropriate in the leader car??
  * Orange is currently unused but may be used later.
  * Note: cautious drivers should slow down for organge, but
  * aggresive drivers may choose to "run" orange lights.
+ *
+ * Invisible cars are placed at the "stop line" of the
+ * intersection to cause other cars to stop
+ * This is used instead of the leader car to stop other cars
  */
 typedef struct Car {
     Point location;
@@ -41,8 +49,8 @@ typedef struct Car {
     char * plate; //This is the cars ID number or licence plate
     bool red; //tells the current car that the light for the intersection that it is approaching is red
     bool orange; //tells the current car that the light for the intersection that it is approaching is orange
-    bool invisible; //sets the car to be dimenionless/invisible. This is used instead of the leader car to stop other cars
-    TurnDirection turn_direction;
+    bool invisible; //sets the car to be dimenionless/invisible.
+	TurnIntention turn_intention;
 } Car;
 
 /**
@@ -54,19 +62,18 @@ typedef struct Car {
  * The car at the "front" of the lane ie. closest to the next intersection is at start_index
  * The last car in the queue of cars on this lane is at end_index
  */
-typedef struct CarLane {
+typedef struct LaneOfCars {
     Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array??
     int start_index;
     int end_index;
     Direction direction;
     int lane_id;
-}
+} LaneOfCars;
 
 typedef struct Intersection {
     Point origin;
     float width;
     float height;
-
 } Intersection;
 
 /**
@@ -75,18 +82,18 @@ typedef struct Intersection {
  * A vertical lane will have identical x co-ords
  */
 typedef struct Lane {
+	int laneID;
 	Direction direction;
 	Point start_pos;
 	Point end_pos;
 	float density; //This describes how many cars should be on this lane
 } Lane;
 
+//all lanes in the simulation.
+//Used to determine where to spawn cars and where to destroy them and how many to spawn
+Lane all_lanes[NUM_OF_LANES]; 
 
-#define MAX_CARS_PER_LANE 100 //Entire array of cars is statically allocated
-#define NUM_OF_LANES 8
-
-Lane all_lanes[NUM_OF_LANES]; //all lanes in the simulation. Used to determine where to spawn cars and where to destroy them and how many to spawn
-CarLane all_cars[NUM_OF_LANES]; //this array contains all the lane of cars in the simulation
+LaneOfCars all_cars[NUM_OF_LANES]; //this array contains all the lane of cars in the simulation
 
 int actual_num_of_cars = 0; //This is how many cars are currently in the simulation
 

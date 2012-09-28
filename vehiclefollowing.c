@@ -1,12 +1,7 @@
 //This file is the main file for vehicle folloiwng
 
 #include globals.h
-
-int MAP_X_MAX = 1000;
-int MAP_Y_MAX = 1000;
-
-int ACCEL = 5; //km/h/tick
-int DECEL = 5; //km/h/tick
+#include vehiclefollowing.h
 
 void init()
 {
