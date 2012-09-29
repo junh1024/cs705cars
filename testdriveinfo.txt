@@ -1,4 +1,4 @@
-                     Lane ID 5  |       |  Lane ID 6
+                     Lane ID 4  |       |  Lane ID 5
                                 |       |
                                 |       |
                                 |       |
@@ -7,10 +7,10 @@
                                 |       |
                                 |       |
                                 |       |
-Lane ID 1                       |       |                        Lane ID 3
+Lane ID 0                       |       |                        Lane ID 2
 ---------------------------------       -------------------------------
 
-Lane ID 2                                                        Lane ID 4
+Lane ID 1                                                        Lane ID 3
 ---------------------------------       -------------------------------
                                 |       |
                                 |       |
@@ -22,7 +22,7 @@ Lane ID 2                                                        Lane ID 4
                                 |       |
                                 |       |
                                 |       |
-                     Lane ID 7  |       |  Lane ID 8
+                     Lane ID 6  |       |  Lane ID 7
 
 
 
