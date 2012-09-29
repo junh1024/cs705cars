@@ -50,7 +50,7 @@ typedef struct Car {
     bool red; //tells the current car that the light for the intersection that it is approaching is red
     bool orange; //tells the current car that the light for the intersection that it is approaching is orange
     bool invisible; //sets the car to be dimenionless/invisible.
-	TurnIntention turn_intention;
+    TurnIntention turn_intention;
 } Car;
 
 #define increment(i) (++i % MAX_CARS_PER_LANE)
@@ -70,7 +70,7 @@ typedef struct LaneOfCars {
     Car cars[MAX_CARS_PER_LANE]; //all the cars in any single lane. This is a circular array
     int start_index;
     int end_index;
-	int count; //the actual number of cars in this lane
+    int count; //the actual number of cars in this lane
     Direction direction;
     int lane_id;
 } LaneOfCars;
@@ -87,11 +87,11 @@ typedef struct Intersection {
  * A vertical lane will have identical x co-ords
  */
 typedef struct Lane {
-	int lane_id;
-	Direction direction;
-	Point start_pos;
-	Point end_pos;
-	float density; //This describes how many cars should be on this lane
+    int lane_id;
+    Direction direction;
+    Point start_pos;
+    Point end_pos;
+    float density; //This describes how many cars should be on this lane
 } Lane;
 
 //all lanes in the simulation.
