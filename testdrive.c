@@ -1,20 +1,29 @@
-//testdrive.c
-//
-// This program initialises a road layout containing 1 intersection
-// The intersection is setup as per testdriveinfo.txt
-//
-// A very simple drive path is tested which uses only two lanes
-// These lanes are connected directly to each other as follows
-//
-//
-//          ==============================        ===================================
-//
-//
-//                                                                 ^This is lane ID 3
-//          ^Above here is lane ID 1       ^intersection
-//
-//
-// A car will drive from the beginning of lane 1 across the intersection into lane 3
+/**
+ * testdrive.c
+ * 
+ * @author:               Devin Barry
+ * @date:                 28.09.2012
+ * @last modififed        29.09.2012
+ * @description
+ * 
+ * This program initialises a road layout containing 1 intersection
+ * The intersection is setup as per testdriveinfo.txt
+ *
+ * A very simple drive path is tested which uses only two lanes
+ * These lanes are connected directly to each other as follows
+ *
+ *
+ *    ==============================        ===================================
+ *
+ *
+ *                                                           ^This is lane ID 3
+ *    ^Above here is lane ID 1       ^intersection
+ *
+ *
+ * A car will drive from the beginning of lane 1 across the intersection into lane 3
+ * 
+ * 
+ */
 
 #include "globals.h"
 #include "vehiclefollowing.h"
@@ -37,6 +46,7 @@ void print_all_lanes();
 void print_all_cars();
 void print_car(Car car);
 char * get_direction_string(Direction direction);
+char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
 
 /*----------End Function Prototypes----------*/
@@ -180,6 +190,11 @@ void car_following_model(Car *currentCar, Car *carInFront) {
 //This function updates the position of the current car assuming it is the leader
 void leader_car_model(Car *currentCar) {
 	//move car forward in the direction it was travellening at the speed it was travelling
+	int current_x_location = currentCar->location.x;
+	current_x_location += currentCar->speed;
+	currentCar->location.x = current_x_location;
+	Direction current_car_direction = all_lanes[currentCar->lane_id].direction; //the direction of the lane in which this car is in
+	printf("Current Car Direction: %s\n", get_direction_string(current_car_direction));
 }
 
 
@@ -226,4 +241,11 @@ char * get_direction_string(Direction direction) {
 	else return "N/A";
 }
 
+char * get_compass_direction_string(Direction direction) {
+	if (direction == SN) return "SN";                  // South to north
+	if (direction == NS) return "NS";                  // North to south
+	if (direction == EW) return "EW";                  // East to west
+	if (direction == WE) return "WE";                  // West to east
+	else return "N/A";
+}
 
