@@ -63,15 +63,11 @@ double randn_notrig(double mu, double sigma) {
 	}
 }
 
-
-
 int main(){
 	double k;
 	int i=0;
-	for(;i<100;i++) {
+	for(;i<10;i++) {
 		k=randn_notrig(0.495,0.24);
 		printf("%f \n",k);
 	}
-
-
 }

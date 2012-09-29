@@ -15,11 +15,10 @@ int spawnOrNot() {
 	} else {
 		return 0;
 	}
-	
 }
 int main(){
 	int i,k;
-	for(i=0;i<100;i++)
+	for(i=0;i<10;i++)
 	{
 		k=spawnOrNot(); // This method is called every second
 		printf("%d \n",k);        

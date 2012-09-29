@@ -29,6 +29,8 @@
 #include "vehiclefollowing.h"
 #include <stdio.h>
 #include <time.h>
+// #include <string.h>
+#include <math.h>
 
 #define TOTAL_TICKS 20
 
@@ -50,6 +52,7 @@ void print_car(Car car);
 char * get_direction_string(Direction direction);
 char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
+char* generatecarplate();
 
 /*----------End Function Prototypes----------*/
 
@@ -147,7 +150,7 @@ void init_lanes_of_cars() {
 	
 	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
 	//give car1 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
+	all_cars[0].cars[all_cars[0].end_index].plate = generatecarplate() ;
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
@@ -156,7 +159,7 @@ void init_lanes_of_cars() {
 	all_cars[0].count++; //Without changing these two variables things will break
 	
 	//give car2 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = "DEF456";
+	all_cars[0].cars[all_cars[0].end_index].plate =generatecarplate() ;
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
@@ -215,6 +218,7 @@ void update_car_lane(LaneOfCars *current_car_lane) {
  //the numbers mean
 void car_following_model(Car *car2, Car *car1) {
 
+	float speedlimit=global_speed_limit;
 	float distancetonextcar;
 	//the direction of the lane in which this car is in
 	Direction current_car_direction = all_lanes[car2->lane_id].direction;
@@ -251,9 +255,9 @@ void car_following_model(Car *car2, Car *car1) {
 	{
 		car2->speed=0;
 	}
-	if (car2->speed>=60)//limit speed to 60kmh
+	if (car2->speed>=speedlimit)
 	{
-		car2->speed=60;
+		car2->speed=speedlimit;
 	}
 	
 	switch(current_car_direction)//update position of car2 by adding its speed in m/s
@@ -383,6 +387,36 @@ void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
 	all_cars[current_lane_id].count--; //decrease number of cars in this lane
 }
 
+/*============================ UTILITY FUNCTIONS ===============================*/
+
+char* generatecarplate() {
+	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char plate[7];
+	int i;
+	int k;
+	char h;
+	int j;
+
+	for (i=0;i<3;i++) {
+		j=rand()%25;
+		plate[i] = letters[j];
+	}
+	
+	for (i=3;i<6;i++) {
+	k=rand()%10;
+	h=(char)(((int)'0')+k); 
+	plate[i] = h;
+	}
+	plate[6]='\0';
+	
+	char *theplate;
+	theplate = (char *)malloc(7*sizeof(char));
+	strcpy(theplate,plate);
+	
+	return theplate;
+}
+//spawnornotdensity
+
 /*============================ THESE FUNCTIONS ONLY USED FOR DEVINS OUTPUT DISPLAY ===============================*/
 
 void print_all_lanes() {
@@ -415,7 +449,7 @@ void print_car(Car car) {
 
 char * get_point_string(Point point) {
 	static char buff[20];
-	sprintf(buff, "x=%2.0f, y=%2.0f", point.x, point.y);
+	sprintf(buff, "x=%2.2f, y=%2.2f", point.x, point.y);
 	return buff;
 }
 
