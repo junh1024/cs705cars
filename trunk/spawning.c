@@ -19,8 +19,7 @@ int spawnOrNot() {
 	
 }
 int main(){
-	int k;
-	int i=0;    
+	int k;  
 	double time_counter = 0;      
 	clock_t this_time = clock();     
 	clock_t last_time = this_time;        
