@@ -23,15 +23,23 @@
 
 #define TOTAL_TICKS 20
 
+
+/*------------Function Prototypes-----------*/
+
 void init_lanes();
 void init_lanes_of_cars();
 void update_car_lane(LaneOfCars *current_car_lane);
-void update_car_location(Car *currentCar, Car *carInFront);
+
+void car_following_model(Car *currentCar, Car *carInFront);
+void leader_car_model(Car *currentCar);
+
 void print_all_lanes();
 void print_all_cars();
 void print_car(Car car);
 char * get_direction_string(Direction direction);
 char * get_point_string(Point point);
+
+/*----------End Function Prototypes----------*/
 
 int main() {
 	init_lanes();
@@ -46,6 +54,8 @@ int main() {
 	return 0;
 }
 
+//This function sets up all the lanes so that we can test our car
+//following model
 void init_lanes() {
 	int i;
 	for (i = 0; i < NUM_OF_LANES; i++) {
@@ -94,6 +104,7 @@ void init_lanes() {
 	all_lanes[7].end_pos.y = 20;
 }
 
+//This function inits all the car lanes
 void init_lanes_of_cars() {
 	int i, j;
 	for (i = 0; i < NUM_OF_LANES; i++) {
@@ -123,32 +134,52 @@ void init_lanes_of_cars() {
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
 	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
-	all_cars[0].end_index = 1; //Tells people there is one car in the array
-	all_cars[0].count = 1; //Without changing these two variables things will break
+	all_cars[0].end_index++; //Tells people there is one more car in the array
+	all_cars[0].count++; //Without changing these two variables things will break
 }
 
+//This function will update the positions of all cars in a certain lane
 void update_car_lane(LaneOfCars *current_car_lane) {
-	//move car forward in the direction it was travellening at the speed it was travelling
 	int i;
 	int startIndex = current_car_lane->start_index;
 	int endIndex = current_car_lane->end_index;
 	
+	/**
+	 * This loop comes from the macro defined in globals.h
+	 * It ensures that the circular buffer is always iterated in the correct
+	 * order. The car at the front (closest to the intersection) of the lane
+	 * will always occur first in the loop (when i = startIndex). i will
+	 * increment through all cars (including possibly wrapping around at the
+	 * end of the array and counting up again) untill endIndex is reached.
+	 * 
+	 * accessing the current car can be done as follows:
+	 * current_car_lane->cars[i]            <---This is the current car
+	 */
 	foreach_car(i, startIndex, endIndex) {
 		if (i == startIndex) {
 			//do something special because this is the front car in the lane
+			leader_car_model(&(current_car_lane->cars[i]));
+			print_car(current_car_lane->cars[i]); //print data about the current car
 		}
 		else {
-			update_car_location(&(current_car_lane->cars[i]), &(current_car_lane->cars[i-1]));
-			print_car(current_car_lane->cars[i]); // <--------- This is the current car
+			car_following_model(&(current_car_lane->cars[i]), &(current_car_lane->cars[i-1]));
+			print_car(current_car_lane->cars[i]);
 		}
 	}
 }
 
-void update_car_location(Car *currentCar, Car *carInFront) {
+//This function updates the position of the current car, but obeys the car following model
+void car_following_model(Car *currentCar, Car *carInFront) {
 	int current_x_location = currentCar->location.x;
 	current_x_location += currentCar->speed;
 	currentCar->location.x = current_x_location;
-	int fuck = all_lanes[currentCar->lane_id].direction; //the direction of the lane in which this car is in
+	Direction current_car_direction = all_lanes[currentCar->lane_id].direction; //the direction of the lane in which this car is in
+	printf("Current Car Direction: %s\n", get_direction_string(current_car_direction));
+}
+
+//This function updates the position of the current car assuming it is the leader
+void leader_car_model(Car *currentCar) {
+	//move car forward in the direction it was travellening at the speed it was travelling
 }
 
 
