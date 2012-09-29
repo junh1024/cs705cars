@@ -163,7 +163,6 @@ void init_lanes_of_cars() {
 	all_cars[0].cars[all_cars[0].end_index].speed = 40; //start immediately at speed
 	all_cars[0].end_index++;
 	all_cars[0].count++;
-	
 }
 
 //This function will update the positions of all cars in a certain lane
@@ -207,7 +206,13 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 /**
  * This function updates the position of the current car, but obeys the car following model
  */
-void car_following_model(Car *car2, Car *car1) {//car2=current car, car1=car in front
+ //car2=current car, car1=car in front
+ //please find and replace car1 and car2 with currentCar and carInFront
+ //its easier to read than abritrary number assigment.
+ //its make the code clearer for others looking at it
+ //someone not familiar with the code will not be able to remember what
+ //the numbers mean
+void car_following_model(Car *car2, Car *car1) {
 
 	float distancetonextcar;
 	//the direction of the lane in which this car is in
@@ -275,16 +280,16 @@ void car_following_model(Car *car2, Car *car1) {//car2=current car, car1=car in 
 /**
  * This function updates the position of the current car assuming it is the leader
  */
-void leader_car_model(Car *car1) {
+void leader_car_model(Car *currentCar) {
 	//move car forward in the direction it was travellening at the speed it was travelling
-	int current_x_location = car1->location.x;
-	current_x_location += car1->speed;
-	car1->location.x = current_x_location;
+	int current_x_location = currentCar->location.x;
+	current_x_location += currentCar->speed;
+	currentCar->location.x = current_x_location;
 	
 	//the direction of the lane in which this car is in
-	Direction current_car_direction = all_lanes[car1->lane_id].direction;
+	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
 	
-	print_car(*car1); //print data about the current car
+	print_car(*currentCar); //print data about the current car
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
 
