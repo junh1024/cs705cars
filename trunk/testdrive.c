@@ -16,11 +16,11 @@
  *    ==============================        ===================================
  *
  *
- *                                                           ^This is lane ID 3
- *    ^Above here is lane ID 1       ^intersection
+ *                                                           ^This is lane ID 2
+ *    ^Above here is lane ID 0       ^intersection
  *
  *
- * A car will drive from the beginning of lane 1 across the intersection into lane 3
+ * A car will drive from the beginning of lane 0 across the intersection into lane 2
  * 
  * 
  */
@@ -41,6 +41,8 @@ void update_car_lane(LaneOfCars *current_car_lane);
 
 void car_following_model(Car *currentCar, Car *carInFront);
 void leader_car_model(Car *currentCar);
+bool transition_car_to_new_lane(Car *currentCar);
+void copy_car_to_new_lane(int current_lane_id, int next_lane_id);
 
 void print_all_lanes();
 void print_all_cars();
@@ -59,7 +61,8 @@ int main() {
 	int i;
 	for (i = 0; i < TOTAL_TICKS; i++) {
 		printf("=====   Tick %d\n\n", i+1);
-		update_car_lane(&all_cars[0]);
+		update_car_lane(&all_cars[0]); //we are only updating lane0 and lane2
+		update_car_lane(&all_cars[2]);
 	}
 	return 0;
 }
@@ -76,25 +79,28 @@ void init_lanes() {
 	all_lanes[0].direction = RIGHT;
 	all_lanes[0].start_pos.x = 0;
 	all_lanes[0].start_pos.y = 20;
-	all_lanes[0].end_pos.x = 50;
+	all_lanes[0].end_pos.x = 600;
 	all_lanes[0].end_pos.y = 20;
 	//lane 1
 	all_lanes[1].direction = LEFT;
 	all_lanes[1].start_pos.x = 0;
-	all_lanes[1].start_pos.y = 20;
-	all_lanes[1].end_pos.x = 50;
-	all_lanes[1].end_pos.y = 20;
+	all_lanes[1].start_pos.y = 50;
+	all_lanes[1].end_pos.x = 600;
+	all_lanes[1].end_pos.y = 50;
 	//lane 2
 	all_lanes[2].direction = RIGHT;
-	all_lanes[2].start_pos.x = 0;
+	all_lanes[2].start_pos.x = 650;
 	all_lanes[2].start_pos.y = 20;
-	all_lanes[2].end_pos.x = 50;
+	all_lanes[2].end_pos.x = 1300;
 	all_lanes[2].end_pos.y = 20;
+	//lane 3
 	all_lanes[3].direction = LEFT;
-	all_lanes[3].start_pos.x = 0;
-	all_lanes[3].start_pos.y = 20;
-	all_lanes[3].end_pos.x = 50;
-	all_lanes[3].end_pos.y = 20;
+	all_lanes[3].start_pos.x = 650;
+	all_lanes[3].start_pos.y = 50;
+	all_lanes[3].end_pos.x = 1300;
+	all_lanes[3].end_pos.y = 50;
+	
+	//lane 4
 	all_lanes[4].direction = UP;
 	all_lanes[4].start_pos.x = 0;
 	all_lanes[4].start_pos.y = 20;
@@ -139,23 +145,24 @@ void init_lanes_of_cars() {
 		}
 	}
 	
-	/*===================== HERE WE CREATE 1 CAR MANUALLY ===================================*/
-	//laneID 1 - give 1 car a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = "C4RON3";
+	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
+	//give car1 a plate
+	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
 	//place that car at location on the lane that it is supposed to spawn on
-	all_cars[0].cars[all_cars[0].end_index].location.x = 20;
+	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
-	all_cars[0].cars[all_cars[0].end_index].speed = 10; //start immediately at speed
+	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
 	all_cars[0].end_index++; //Tells people there is one more car in the array
 	all_cars[0].count++; //Without changing these two variables things will break
 	
-	//am i doing something wrong cuz this car doesn't print?
-	all_cars[1].cars[all_cars[1].end_index].plate = "C4RTW0";
-	all_cars[1].cars[all_cars[1].end_index].location.x = 0;
-	all_cars[1].cars[all_cars[1].end_index].location.y = all_lanes[0].start_pos.y;
-	all_cars[1].cars[all_cars[1].end_index].speed = 10; //start immediately at speed
-	all_cars[1].end_index++; //Tells people there is one more car in the array
-	all_cars[1].count++; //Without changing these two variables things will break
+	//give car2 a plate
+	all_cars[0].cars[all_cars[0].end_index].plate = "DEF456";
+	//place that car at location on the lane that it is supposed to spawn on
+	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
+	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
+	all_cars[0].cars[all_cars[0].end_index].speed = 40; //start immediately at speed
+	all_cars[0].end_index++;
+	all_cars[0].count++;
 	
 }
 
@@ -178,6 +185,16 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 	 */
 	foreach_car(i, startIndex, endIndex) {
 		if (i == startIndex) {
+			//right now ONLY the leader car can transition between lanes
+			//this means currently only ONE CAR per tick can change lanes
+			//if cars are travelling really fast and several change lanes
+			//in one tick this method will blow up. Changes are needed here
+			//to allow this simulation to deal with multiple cars moving
+			//lanes per tick
+			if (transition_car_to_new_lane(&(current_car_lane->cars[i]))) {
+				continue; //dont update car position if it was moved to a new lane
+			}
+			
 			//do something special because this is the front car in the lane
 			leader_car_model(&(current_car_lane->cars[i]));
 		}
@@ -193,6 +210,7 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 void car_following_model(Car *car2, Car *car1) {//car2=current car, car1=car in front
 
 	float distancetonextcar;
+	//the direction of the lane in which this car is in
 	Direction current_car_direction = all_lanes[car2->lane_id].direction;
 
 	switch(current_car_direction)//compute the distance to the next car based on lane direction & appropriate xy coords
@@ -250,12 +268,6 @@ void car_following_model(Car *car2, Car *car1) {//car2=current car, car1=car in 
 			car2->location.x+=(car2->speed/3.6);
 			break;
 	}
-
-
-	
-	//the direction of the lane in which this car is in
-	
-	
 	print_car(*car2); //print data about the current car
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
@@ -276,6 +288,89 @@ void leader_car_model(Car *car1) {
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
 
+/**
+ * moves car over an intersection to a new lane
+ * --test car position, if it is at the end (or more) of the current lane
+ * --move it to the correct place in the next lane
+ * 
+ * @return boolean indicating whether a car was moved to the next lane
+ *         or not
+ */
+bool transition_car_to_new_lane(Car *currentCar) {
+	//the direction of the lane in which this car is in
+	Direction lane_direction = all_lanes[currentCar->lane_id].direction;
+	//the end co-ordinates of the lane in which this car is in
+	Point lane_end = all_lanes[currentCar->lane_id].end_pos;
+	
+	if (lane_direction == WE || lane_direction == EW) {
+		//Here lane y-coord SHOULD ALWAYS equal car y-coord
+		if (currentCar->location.x >= lane_end.x) {
+			//we should move car to next lane
+			//this test only uses two lanes so for right now we know that there is only one possible lane transition
+			//in the future more code will need to go here to deal with all the other possibilities of lane transitions
+			copy_car_to_new_lane(0, 2);
+			return true;
+		}
+		return false; //else its all good
+	}
+	
+	//Currently this will never get called.
+	if (lane_direction == SN || lane_direction == NS) {
+		//Here lane x-coord SHOULD ALWAYS equal car x-coord
+		if (currentCar->location.y >= lane_end.y) {
+			//we should move car to next lane
+			return true;
+		}
+		return false; //else its all good
+	}
+	return false;
+}
+
+/**
+ * copies the car out of its current lane array and into its new lane array
+ */
+void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
+	//move car from front of <current_lane_id> to the back of <next_lane_id>
+	int current_lane_start_index = all_cars[current_lane_id].start_index;
+	int next_lane_end_index = all_cars[next_lane_id].end_index;
+	
+	//this is the car to be moved
+	Car *currentCar = &(all_cars[current_lane_id].cars[current_lane_start_index]);
+	//this is the open slot in the next lane
+	Car *nextCar = &(all_cars[next_lane_id].cars[next_lane_end_index]);
+	
+	//Copy all the specs of the "old car" over to the "new car"
+	
+	nextCar->plate = currentCar->plate;
+	//cars speed doesnt change as it moves over intersection (maybe it does change in future)
+	nextCar->speed = currentCar->speed;
+	nextCar->red = currentCar->red;
+	nextCar->orange = currentCar->orange;
+	nextCar->invisible = currentCar->invisible;
+	
+	//turn intention might need to change if car has just turned into new lane
+	nextCar->turn_intention = currentCar->turn_intention;
+	nextCar->lane_id = next_lane_id; //set the lane_id of the "new car" to the next lane
+	
+	//place the "new car" at the start point of the new lane
+	//if the car has "overlapped" the edge of its old lane,
+	//it should be moved this far along from its spawn point on the new lane
+	//this is a TODO
+	nextCar->location.x = all_lanes[next_lane_id].start_pos.x;
+	nextCar->location.y = all_lanes[next_lane_id].start_pos.y;
+	
+	//------------------------TODO--------------------------
+	//The incremeneting of decrementing of the indexs
+	// are not circular buffer safe. Macros need to be put in here!!!
+	
+	//These must be incremented to show that the "new car" has turned up in the lane
+	all_cars[next_lane_id].end_index++; 
+	all_cars[next_lane_id].count++;
+	
+	//finally the "old car" should be removed from its original lane
+	all_cars[current_lane_id].start_index++; //increment start index (car behind old car is now at front)
+	all_cars[current_lane_id].count--; //decrease number of cars in this lane
+}
 
 /*============================ THESE FUNCTIONS ONLY USED FOR DEVINS OUTPUT DISPLAY ===============================*/
 
