@@ -19,12 +19,17 @@
 #include "globals.h"
 #include "vehiclefollowing.h"
 #include <stdio.h>
+#include <time.h>
+
+#define TOTAL_TICKS 20
 
 void init_lanes();
 void init_lanes_of_cars();
-void update_car_lane(LaneOfCars current_car_lane);
+void update_car_lane(LaneOfCars *current_car_lane);
+void update_car_location(Car *currentCar);
 void print_all_lanes();
 void print_all_cars();
+void print_car(Car car);
 char * get_direction_string(Direction direction);
 char * get_point_string(Point point);
 
@@ -33,6 +38,11 @@ int main() {
 	init_lanes_of_cars();
 	//print_all_lanes();
 	//print_all_cars();
+	int i;
+	for (i = 0; i < TOTAL_TICKS; i++) {
+		printf("=====   Tick %d\n\n", i+1);
+		update_car_lane(&all_cars[0]);
+	}
 	return 0;
 }
 
@@ -104,21 +114,35 @@ void init_lanes_of_cars() {
 		}
 	}
 	//laneID 1
+	
+	/*===================== HERE WE CREATE 1 CAR MANUALLY ===================================*/
 	//give 1 car a plate
 	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
+	all_cars[0].end_index = 1; //Tells people there is one car in the array
+	all_cars[0].count = 1; //Without changing these two variables things will break
 }
 
-void update_car_lane(LaneOfCars current_car_lane) {
+void update_car_lane(LaneOfCars *current_car_lane) {
 	//move car forward in the direction it was travellening at the speed it was travelling
 	int i;
-	foreach_car(i, current_car_lane.start_index, current_car_lane.end_index) {
-		//printstuff
+	foreach_car(i, current_car_lane->start_index, current_car_lane->end_index) {
+		update_car_location(&(current_car_lane->cars[i]));
+		print_car(current_car_lane->cars[i]); // <--------- This is the current car
 	}
 }
+
+void update_car_location(Car *currentCar) {
+	int current_x_location = currentCar->location.x;
+	current_x_location += currentCar->speed;
+	currentCar->location.x = current_x_location;
+}
+
+
+/*============================ THESE FUNCTIONS ONLY USED FOR DEVINS OUTPUT DISPLAY ===============================*/
 
 void print_all_lanes() {
 	int i;
@@ -138,6 +162,13 @@ void print_all_cars() {
 	printf("===========================\n");
 	printf("all_cars:\n");
 	printf("===========================\n\n");
+}
+
+void print_car(Car car) {
+	printf("----------Car plate: %s----------\n", car.plate);
+	printf("Current location: %s\n", get_point_string(car.location));
+	printf("Current speed: %d\n", car.speed);
+	printf("Invisible: %d\n\n", car.invisible);
 }
 
 char * get_point_string(Point point) {
