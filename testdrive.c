@@ -26,7 +26,7 @@
 void init_lanes();
 void init_lanes_of_cars();
 void update_car_lane(LaneOfCars *current_car_lane);
-void update_car_location(Car *currentCar);
+void update_car_location(Car *currentCar, Car *carInFront);
 void print_all_lanes();
 void print_all_cars();
 void print_car(Car car);
@@ -97,7 +97,7 @@ void init_lanes() {
 void init_lanes_of_cars() {
 	int i, j;
 	for (i = 0; i < NUM_OF_LANES; i++) {
-		all_cars[i].lane_id = i+1;
+		all_cars[i].lane_id = all_lanes[i].lane_id; //here we copy the lane ID from all_lanes
 		all_cars[i].start_index = 0;
 		all_cars[i].end_index = 0;
 		all_cars[i].count = 0;
@@ -111,6 +111,7 @@ void init_lanes_of_cars() {
 			all_cars[i].cars[j].orange = false;
 			all_cars[i].cars[j].invisible = false;
 			all_cars[i].cars[j].turn_intention = STRAIGHT;
+			all_cars[i].cars[j].lane_id = all_lanes[i].lane_id; //here we copy the lane ID from all_lanes
 		}
 	}
 	//laneID 1
@@ -120,7 +121,7 @@ void init_lanes_of_cars() {
 	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
-	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
+	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
 	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
 	all_cars[0].end_index = 1; //Tells people there is one car in the array
 	all_cars[0].count = 1; //Without changing these two variables things will break
@@ -129,16 +130,25 @@ void init_lanes_of_cars() {
 void update_car_lane(LaneOfCars *current_car_lane) {
 	//move car forward in the direction it was travellening at the speed it was travelling
 	int i;
-	foreach_car(i, current_car_lane->start_index, current_car_lane->end_index) {
-		update_car_location(&(current_car_lane->cars[i]));
-		print_car(current_car_lane->cars[i]); // <--------- This is the current car
+	int startIndex = current_car_lane->start_index;
+	int endIndex = current_car_lane->end_index;
+	
+	foreach_car(i, startIndex, endIndex) {
+		if (i == startIndex) {
+			//do something special because this is the front car in the lane
+		}
+		else {
+			update_car_location(&(current_car_lane->cars[i]), &(current_car_lane->cars[i-1]));
+			print_car(current_car_lane->cars[i]); // <--------- This is the current car
+		}
 	}
 }
 
-void update_car_location(Car *currentCar) {
+void update_car_location(Car *currentCar, Car *carInFront) {
 	int current_x_location = currentCar->location.x;
 	current_x_location += currentCar->speed;
 	currentCar->location.x = current_x_location;
+	int fuck = all_lanes[currentCar->lane_id].direction; //the direction of the lane in which this car is in
 }
 
 
