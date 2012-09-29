@@ -52,6 +52,7 @@ typedef struct Car {
     bool orange; //tells the current car that the light for the intersection that it is approaching is orange
     bool invisible; //sets the car to be dimenionless/invisible.
     TurnIntention turn_intention;
+    int lane_id; //the lane which this car is in
 } Car;
 
 #define increment(i) (++i % MAX_CARS_PER_LANE)
@@ -93,22 +94,22 @@ const float TRAFFIC_LIGHT_HEIGHT = 20;
 
 /* Traffic Light State */
 typedef enum {
-	RED = 0,
+    RED = 0,
     ORANGE = 1,
-	GREEN = 2,
+    GREEN = 2,
 }TrafLightState;
 
 typedef struct{
-	float xPos;
-	float yPos;
-	TrafLightState state;
+    float xPos;
+    float yPos;
+    TrafLightState state;
 } trafLight;
 
 typedef struct Box {
-	Point center;
-	float width;
-	float height;
-	Direction direction;
+    Point center;
+    float width;
+    float height;
+    Direction direction;
 } Box;
 
 /**
