@@ -12,16 +12,16 @@ char* generate() {
 	int k;
 	char h;
 	int j;
-	
-	for (i=0;i<3;i++) {
-		k=rand()%10;
-		h=(char)(((int)'0')+k); 
-		plate[i] = h;
-	}
 
 	for (i=0;i<3;i++) {
 		j=rand()%25;
-		plate[i+3] = letters[j];
+		plate[i] = letters[j];
+	}
+	
+	for (i=0;i<3;i++) {
+	k=rand()%10;
+	h=(char)(((int)'0')+k); 
+	plate[i+3] = h;
 	}
 	return plate;
 }

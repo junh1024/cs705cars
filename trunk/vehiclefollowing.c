@@ -1,7 +1,7 @@
 //This file is the main file for vehicle folloiwng
 
-#include globals.h
-#include vehiclefollowing.h
+#include "globals.h"
+#include "vehiclefollowing.h"
 
 void init()
 {
@@ -18,7 +18,7 @@ void init()
 	//drive in direction of lane
 }
 
-void main() {
+int main() {
 	//remove cars when they drive off map
 		// * check all positions of cars and test if they are still on a lane
 
@@ -29,13 +29,14 @@ void main() {
 
 	/* move all cars */
 	int i = 0;
-	for (i < actual_num_of_cars; i++)
-	{
-		move_one_car(all_cars[i]);
-	}
+	// for (i < actual_num_of_cars; i++)
+	// {
+		// move_one_car(all_cars[i]);
+	// }
+	return 0;
 }
 
-void update_car_lane(CarLane current_car_lane) {
+void update_car_lane(Lane current_car_lane) {
 	//move car forward in the direction it was travellening at the speed it was travelling
 }
 

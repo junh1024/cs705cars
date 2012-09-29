@@ -160,7 +160,7 @@ void init_lanes_of_cars() {
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
-	all_cars[0].cars[all_cars[0].end_index].speed = 40; //start immediately at speed
+	all_cars[0].cars[all_cars[0].end_index].speed = 0; //start immediately at speed
 	all_cars[0].end_index++;
 	all_cars[0].count++;
 }
@@ -190,7 +190,8 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 			//in one tick this method will blow up. Changes are needed here
 			//to allow this simulation to deal with multiple cars moving
 			//lanes per tick
-			if (transition_car_to_new_lane(&(current_car_lane->cars[i]))) {
+			if (transition_car_to_new_lane(&(current_car_lane->cars[i]))) 
+			{
 				continue; //dont update car position if it was moved to a new lane
 			}
 			
@@ -282,9 +283,8 @@ void car_following_model(Car *car2, Car *car1) {
  */
 void leader_car_model(Car *currentCar) {
 	//move car forward in the direction it was travellening at the speed it was travelling
-	int current_x_location = currentCar->location.x;
-	current_x_location += currentCar->speed;
-	currentCar->location.x = current_x_location;
+	currentCar->location.x += (currentCar->speed)/3.6;
+
 	
 	//the direction of the lane in which this car is in
 	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
