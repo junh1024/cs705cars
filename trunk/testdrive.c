@@ -139,8 +139,8 @@ void init_lanes_of_cars() {
 		}
 	}
 	
-	/*===================== HERE WE CREATE 1 CAR MANUALLY ===================================*/
-	//laneID 1 - give 1 car a plate
+	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
+	//give car1 a plate
 	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
@@ -148,6 +148,15 @@ void init_lanes_of_cars() {
 	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
 	all_cars[0].end_index++; //Tells people there is one more car in the array
 	all_cars[0].count++; //Without changing these two variables things will break
+	
+	//give car2 a plate
+	all_cars[0].cars[all_cars[0].end_index].plate = "DEF456";
+	//place that car at location on the lane that it is supposed to spawn on
+	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
+	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
+	all_cars[0].cars[all_cars[0].end_index].speed = 40; //start immediately at speed
+	all_cars[0].end_index++;
+	all_cars[0].count++;
 }
 
 //This function will update the positions of all cars in a certain lane
