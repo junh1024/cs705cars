@@ -1,13 +1,13 @@
 /** Generates car plate number (3 numbers and 3 chars)
 */
-#include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include <time.h>
+// #include <time.h>
 
-char* generate() {
-	char letters[26] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	char plate[6];
+char* generatecarplate() {
+	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	char plate[7];
 	int i;
 	int k;
 	char h;
@@ -18,20 +18,28 @@ char* generate() {
 		plate[i] = letters[j];
 	}
 	
-	for (i=0;i<3;i++) {
+	for (i=3;i<6;i++) {
 	k=rand()%10;
 	h=(char)(((int)'0')+k); 
-	plate[i+3] = h;
+	plate[i] = h;
 	}
-	return plate;
+	plate[6]='\0';
+	
+	char *theplate;
+	theplate = (char *)malloc(7*sizeof(char));
+	strcpy(theplate,plate);
+	
+	return theplate;
 }
 
 int main() {
 	int i;
-	char* k;
-	srand((unsigned)time(NULL));
-	for(i=0;i<100;i++) {
-		k=generate();
-		printf("%c%c%c%c%c%c\n",k[0],k[1],k[2],k[3],k[4],k[5]);
+	char k[7];
+	// srand((unsigned)time(NULL));
+	
+	for(i=0;i<5;i++) {
+		strcpy(k,generatecarplate());
+		printf("%s\n",k);
+		// printf("%d\n",k);
 	}
 }
