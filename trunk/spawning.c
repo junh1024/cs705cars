@@ -19,18 +19,5 @@ int spawnOrNot() {
 	
 }
 int main(){
-	int k;  
-	double time_counter = 0;      
-	clock_t this_time = clock();     
-	clock_t last_time = this_time;        
-	while(1)     {	// while loop per second
-		this_time = clock();          
-		time_counter += (double)(this_time - last_time);          
-		last_time = this_time;          
-		if(time_counter > (double)(NUM_SECONDS * CLOCKS_PER_SEC))         {             
-			time_counter -= (double)(NUM_SECONDS * CLOCKS_PER_SEC);             
-			k=spawnOrNot(); // This method is called every second
-			printf("%d \n",k);        
-		}           
-	}     
+
 }

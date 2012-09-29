@@ -139,24 +139,24 @@ void init_lanes_of_cars() {
 		}
 	}
 	
-	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
-	//give car1 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = "ABC123";
+	/*===================== HERE WE CREATE 1 CAR MANUALLY ===================================*/
+	//laneID 1 - give 1 car a plate
+	all_cars[0].cars[all_cars[0].end_index].plate = "C4RON3";
 	//place that car at location on the lane that it is supposed to spawn on
-	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
+	all_cars[0].cars[all_cars[0].end_index].location.x = 20;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
-	all_cars[0].cars[all_cars[0].end_index].speed = 50; //start immediately at speed
+	all_cars[0].cars[all_cars[0].end_index].speed = 10; //start immediately at speed
 	all_cars[0].end_index++; //Tells people there is one more car in the array
 	all_cars[0].count++; //Without changing these two variables things will break
 	
-	//give car2 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = "DEF456";
-	//place that car at location on the lane that it is supposed to spawn on
-	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
-	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
-	all_cars[0].cars[all_cars[0].end_index].speed = 40; //start immediately at speed
-	all_cars[0].end_index++;
-	all_cars[0].count++;
+	//am i doing something wrong cuz this car doesn't print?
+	all_cars[1].cars[all_cars[1].end_index].plate = "C4RTW0";
+	all_cars[1].cars[all_cars[1].end_index].location.x = 0;
+	all_cars[1].cars[all_cars[1].end_index].location.y = all_lanes[0].start_pos.y;
+	all_cars[1].cars[all_cars[1].end_index].speed = 10; //start immediately at speed
+	all_cars[1].end_index++; //Tells people there is one more car in the array
+	all_cars[1].count++; //Without changing these two variables things will break
+	
 }
 
 //This function will update the positions of all cars in a certain lane
@@ -190,31 +190,89 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 /**
  * This function updates the position of the current car, but obeys the car following model
  */
-void car_following_model(Car *currentCar, Car *carInFront) {
-	int current_x_location = currentCar->location.x;
-	current_x_location += currentCar->speed;
-	currentCar->location.x = current_x_location;
+void car_following_model(Car *car2, Car *car1) {//car2=current car, car1=car in front
+
+	float distancetonextcar;
+	Direction current_car_direction = all_lanes[car2->lane_id].direction;
+
+	switch(current_car_direction)//compute the distance to the next car based on lane direction & appropriate xy coords
+	{
+		case UP:
+			distancetonextcar=fabs(car2->location.y-car1->location.y );
+			break;
+			
+		case DOWN:
+			distancetonextcar=fabs(car2->location.y-car1->location.y );
+			break;
+			
+		case LEFT:
+			distancetonextcar=fabs(car2->location.x-car1->location.x );
+			break;
+			
+		case RIGHT:
+			distancetonextcar=fabs(car2->location.x-car1->location.x );
+			break;
+	}		
+
+	if(distancetonextcar< 7)//smaller than 7 meters abs distace to car1
+	{				
+		car2->speed-=DECEL; //slow down
+	}
+	else
+	{
+		car2->speed+=ACCEL;//speed up
+	}
+		
+	if(car2->speed<0) //can't have negative speed
+	{
+		car2->speed=0;
+	}
+	if (car2->speed>=60)//limit speed to 60kmh
+	{
+		car2->speed=60;
+	}
+	
+	switch(current_car_direction)//update position of car2 by adding its speed in m/s
+	{
+		case UP:
+			car2->location.y-=(car2->speed/3.6);
+			break;
+			
+		case DOWN:
+			car2->location.y+=(car2->speed/3.6);
+			break;
+			
+		case LEFT:
+			car2->location.x-=(car2->speed/3.6);
+			break;
+			
+		case RIGHT:
+			car2->location.x+=(car2->speed/3.6);
+			break;
+	}
+
+
 	
 	//the direction of the lane in which this car is in
-	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
 	
-	print_car(*currentCar); //print data about the current car
+	
+	print_car(*car2); //print data about the current car
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
 
 /**
  * This function updates the position of the current car assuming it is the leader
  */
-void leader_car_model(Car *currentCar) {
+void leader_car_model(Car *car1) {
 	//move car forward in the direction it was travellening at the speed it was travelling
-	int current_x_location = currentCar->location.x;
-	current_x_location += currentCar->speed;
-	currentCar->location.x = current_x_location;
+	int current_x_location = car1->location.x;
+	current_x_location += car1->speed;
+	car1->location.x = current_x_location;
 	
 	//the direction of the lane in which this car is in
-	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
+	Direction current_car_direction = all_lanes[car1->lane_id].direction;
 	
-	print_car(*currentCar); //print data about the current car
+	print_car(*car1); //print data about the current car
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
 
