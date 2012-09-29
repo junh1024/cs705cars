@@ -298,6 +298,12 @@ void leader_car_model(Car *currentCar) {
  * --test car position, if it is at the end (or more) of the current lane
  * --move it to the correct place in the next lane
  * 
+ * The only problem with this lane move function right now is that it
+ * doesn't take into account the size of the intersection. The car
+ * "magically" flies over the intersection and even does its normal
+ * movement in the next lane during the intersection transition tick
+ * This needs to be fixed
+ * 
  * @return boolean indicating whether a car was moved to the next lane
  *         or not
  */
