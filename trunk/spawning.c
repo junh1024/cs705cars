@@ -18,7 +18,7 @@ int spawnOrNot(float densityperhour) {
 }
 int main(){
 	int i,k;
-	for(i=0;i<100;i++)
+	for(i=0;i<10;i++)
 	{
 		k=spawnOrNot(900); // Density assumed: 900 car per hour
 		printf("%d \n",k);        
