@@ -2,8 +2,8 @@
 */
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <time.h>
+// #include <math.h>
+// #include <time.h>
 const float max_rand=32767;
 int spawnOrNot() {
 	float max_car=900; // Density assumed: 900 car per hour
@@ -23,4 +23,5 @@ int main(){
 		k=spawnOrNot(); // This method is called every second
 		printf("%d \n",k);        
 	}
+	return 0;
  }

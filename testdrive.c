@@ -28,9 +28,9 @@
 #include "globals.h"
 #include "vehiclefollowing.h"
 #include <stdio.h>
-#include <time.h>
-// #include <string.h>
-#include <math.h>
+// #include <time.h>
+#include <string.h>
+// #include <math.h>
 
 #define TOTAL_TICKS 20
 
@@ -52,7 +52,26 @@ void print_car(Car car);
 char * get_direction_string(Direction direction);
 char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
-char* generatecarplate();
+
+void generatecarplate(char* plate) {
+	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	int i,j; //temp variables
+	char h;
+	
+	for (i=0;i<3;i++) { //generate 3 letters
+		j=rand()%25;
+		plate[i] = letters[j];
+	}
+	
+	for (i=3;i<6;i++) { //generate 3 numbers
+	j=rand()%10;
+	h=(char)(((int)'0')+j); 
+	plate[i] = h;
+	}
+	plate[6]='\0'; //null character terminator EOS
+
+	return;
+}
 
 /*----------End Function Prototypes----------*/
 
@@ -139,7 +158,7 @@ void init_lanes_of_cars() {
 			all_cars[i].cars[j].location.x = 0;
 			all_cars[i].cars[j].location.y = 0;
 			all_cars[i].cars[j].speed = 0;
-			all_cars[i].cars[j].plate = "000000";
+			strcpy(all_cars[i].cars[j].plate, "000000");
 			all_cars[i].cars[j].red = false;
 			all_cars[i].cars[j].orange = false;
 			all_cars[i].cars[j].invisible = false;
@@ -148,9 +167,13 @@ void init_lanes_of_cars() {
 		}
 	}
 	
+
 	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
 	//give car1 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate = generatecarplate() ;
+	generatecarplate(all_cars[0].cars[all_cars[0].end_index].plate);
+	// all_cars[0].cars[all_cars[0].end_index].plate="BLABLA";
+	 
+	// printf("got here2");
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
@@ -159,7 +182,7 @@ void init_lanes_of_cars() {
 	all_cars[0].count++; //Without changing these two variables things will break
 	
 	//give car2 a plate
-	all_cars[0].cars[all_cars[0].end_index].plate =generatecarplate() ;
+	generatecarplate(all_cars[0].cars[all_cars[0].end_index].plate) ;
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
@@ -356,7 +379,7 @@ void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
 	
 	//Copy all the specs of the "old car" over to the "new car"
 	
-	nextCar->plate = currentCar->plate;
+	strcpy(nextCar->plate, currentCar->plate);
 	//cars speed doesnt change as it moves over intersection (maybe it does change in future)
 	nextCar->speed = currentCar->speed;
 	nextCar->red = currentCar->red;
@@ -389,32 +412,7 @@ void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
 
 /*============================ UTILITY FUNCTIONS ===============================*/
 
-char* generatecarplate() {
-	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	char plate[7];
-	int i;
-	int k;
-	char h;
-	int j;
 
-	for (i=0;i<3;i++) {
-		j=rand()%25;
-		plate[i] = letters[j];
-	}
-	
-	for (i=3;i<6;i++) {
-	k=rand()%10;
-	h=(char)(((int)'0')+k); 
-	plate[i] = h;
-	}
-	plate[6]='\0';
-	
-	char *theplate;
-	theplate = (char *)malloc(7*sizeof(char));
-	strcpy(theplate,plate);
-	
-	return theplate;
-}
 //spawnornotdensity
 
 /*============================ THESE FUNCTIONS ONLY USED FOR DEVINS OUTPUT DISPLAY ===============================*/

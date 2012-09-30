@@ -47,7 +47,7 @@ typedef struct Point {
 typedef struct Car {
     Point location;
     int speed; //km/h
-    char * plate; //This is the cars ID number or licence plate
+    char plate[7]; //This is the cars ID number or licence plate
     bool red; //tells the current car that the light for the intersection that it is approaching is red
     bool orange; //tells the current car that the light for the intersection that it is approaching is orange
     bool invisible; //sets the car to be dimenionless/invisible.
