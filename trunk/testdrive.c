@@ -53,25 +53,7 @@ char * get_direction_string(Direction direction);
 char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
 
-void generatecarplate(char* plate) {
-	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	int i,j; //temp variables
-	char h;
-	
-	for (i=0;i<3;i++) { //generate 3 letters
-		j=rand()%25;
-		plate[i] = letters[j];
-	}
-	
-	for (i=3;i<6;i++) { //generate 3 numbers
-	j=rand()%10;
-	h=(char)(((int)'0')+j); 
-	plate[i] = h;
-	}
-	plate[6]='\0'; //null character terminator EOS
-
-	return;
-}
+void generatecarplate(char* plate);
 
 /*----------End Function Prototypes----------*/
 
@@ -171,9 +153,6 @@ void init_lanes_of_cars() {
 	/*===================== HERE WE CREATE 2 CARS MANUALLY (in lane 0) ===================================*/
 	//give car1 a plate
 	generatecarplate(all_cars[0].cars[all_cars[0].end_index].plate);
-	// all_cars[0].cars[all_cars[0].end_index].plate="BLABLA";
-	 
-	// printf("got here2");
 	//place that car at location on the lane that it is supposed to spawn on
 	all_cars[0].cars[all_cars[0].end_index].location.x = all_lanes[0].start_pos.x;
 	all_cars[0].cars[all_cars[0].end_index].location.y = all_lanes[0].start_pos.y;
@@ -411,7 +390,26 @@ void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
 }
 
 /*============================ UTILITY FUNCTIONS ===============================*/
+//this function generates a gar plate on the given char pointer
+void generatecarplate(char* plate) {
+	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	int i,j; //temp variables
+	char h;
+	
+	for (i=0;i<3;i++) { //generate 3 letters
+		j=rand()%25;
+		plate[i] = letters[j];
+	}
+	
+	for (i=3;i<6;i++) { //generate 3 numbers
+	j=rand()%10;
+	h=(char)(((int)'0')+j); 
+	plate[i] = h;
+	}
+	plate[6]='\0'; //null character terminator EOS
 
+	return;
+}
 
 //spawnornotdensity
 
