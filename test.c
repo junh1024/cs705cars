@@ -7,103 +7,96 @@
 #include "vehiclefollowing.h"
 
 float anumber;
-
-int i=0;
+float distancetonextcar;
 
 FILE * iFile, * oFile;
 
 int main (int argc, char* argv[])
 {
 	Lane lane1;//a static lane
-	
 	Lane *thelane;
-	
 	thelane=&lane1;//pointer to the current lane
 	
 	thelane->direction=RIGHT;
-	
-	
-	// printf("%d",alane.direction );
+	Direction current_car_direction = thelane->direction;
 
 	Car firstcar; //static cars
 	Car secondcar;
 	
-	Car *car1;
-	Car *car2;
+	Car *carInFront;
+	Car *currentCar;
 	
-	car1=&firstcar;//pointer to car in front
-	car2=&secondcar;//pointer to car that's following
+	carInFront=&firstcar;//pointer to car in front
+	currentCar=&secondcar;//pointer to car that's following
 	
-	car1->location.x=-5;
-	car2->speed=0;
-	car2->location.x=-20;
+	carInFront->location.x=-5;
+	currentCar->speed=0;
+	currentCar->location.x=-20;
 	
 	iFile = fopen (argv[1],"r");
 	oFile = fopen (argv[2],"w+");
 	
-	i=0;
-	float distancetonextcar;
 	while ( fscanf(iFile,"%f",&anumber) != EOF )//car1pos
 	{
-		car1->location.x=anumber;
+		carInFront->location.x=anumber;
 
-		switch(thelane->direction)//compute the distance to the next car based on lane direction & appropriate xy coords
+		switch(current_car_direction)//compute the distance to the next car based on lane direction & appropriate xy coords
 		{
 			case UP:
-				distancetonextcar=fabs(car2->location.y-car1->location.y );
+				distancetonextcar=fabs(currentCar->location.y-carInFront->location.y );
 				break;
 				
 			case DOWN:
-				distancetonextcar=fabs(car2->location.y-car1->location.y );
+				distancetonextcar=fabs(currentCar->location.y-carInFront->location.y );
 				break;
 				
 			case LEFT:
-				distancetonextcar=fabs(car2->location.x-car1->location.x );
+				distancetonextcar=fabs(currentCar->location.x-carInFront->location.x );
 				break;
 				
 			case RIGHT:
-				distancetonextcar=fabs(car2->location.x-car1->location.x );
+				distancetonextcar=fabs(currentCar->location.x-carInFront->location.x );
 				break;
 		}		
 
-		if(distancetonextcar< 7)//smaller than 7 meters abs distace to car1
-		{				
-			car2->speed-=DECEL; //slow down
+		if(distancetonextcar< 7)//smaller than 7 meters abs distace to carInFront
+		{
+			currentCar->speed-=DECEL; //slow down
 		}
 		else
 		{
-			car2->speed+=ACCEL;//speed up
+			currentCar->speed+=ACCEL;//speed up
 		}
 			
-		if(car2->speed<0) //can't have negative speed
+		if(currentCar->speed<0) //can't have negative speed
 		{
-			car2->speed=0;
+			currentCar->speed=0;
 		}
-		if (car2->speed>=60)//limit speed to 60kmh
+		if (currentCar->speed>=global_speed_limit)//speed limit in kmh
 		{
-			car2->speed=60;
+			currentCar->speed=global_speed_limit;
 		}
 		
-		switch(thelane->direction)//update position of car2 by adding its speed in m/s
+		switch(current_car_direction)//update position of currentCar by adding its speed in m/s
 		{
 			case UP:
-				car2->location.y-=(car2->speed/3.6);
+				currentCar->location.y-=(currentCar->speed/3.6);
 				break;
 				
 			case DOWN:
-				car2->location.y+=(car2->speed/3.6);
+				currentCar->location.y+=(currentCar->speed/3.6);
 				break;
 				
 			case LEFT:
-				car2->location.x-=(car2->speed/3.6);
+				currentCar->location.x-=(currentCar->speed/3.6);
 				break;
 				
 			case RIGHT:
-				car2->location.x+=(car2->speed/3.6);
+				currentCar->location.x+=(currentCar->speed/3.6);
 				break;
 		}
 
-		fprintf(oFile,"%f\n",car2->location.x);//write pos of car2 to file
+		fprintf(oFile,"%f\n",currentCar->location.x);//write pos of currentCar to file
 	}
 	
 	fclose(iFile);

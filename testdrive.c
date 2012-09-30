@@ -212,75 +212,71 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 /**
  * This function updates the position of the current car, but obeys the car following model
  */
- //car2=current car, car1=car in front
- //please find and replace car1 and car2 with currentCar and carInFront
- //its easier to read than abritrary number assigment.
- //its make the code clearer for others looking at it
- //someone not familiar with the code will not be able to remember what
- //the numbers mean
-void car_following_model(Car *car2, Car *car1) {
+
+void car_following_model(Car *currentCar, Car *carInFront) {
 
 	float speedlimit=global_speed_limit;
 	float distancetonextcar;
 	//the direction of the lane in which this car is in
-	Direction current_car_direction = all_lanes[car2->lane_id].direction;
+	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
 
 	switch(current_car_direction)//compute the distance to the next car based on lane direction & appropriate xy coords
 	{
 		case UP:
-			distancetonextcar=fabs(car2->location.y-car1->location.y );
+			distancetonextcar=fabs(currentCar->location.y-carInFront->location.y );
 			break;
 			
 		case DOWN:
-			distancetonextcar=fabs(car2->location.y-car1->location.y );
+			distancetonextcar=fabs(currentCar->location.y-carInFront->location.y );
 			break;
 			
 		case LEFT:
-			distancetonextcar=fabs(car2->location.x-car1->location.x );
+			distancetonextcar=fabs(currentCar->location.x-carInFront->location.x );
 			break;
 			
 		case RIGHT:
-			distancetonextcar=fabs(car2->location.x-car1->location.x );
+			distancetonextcar=fabs(currentCar->location.x-carInFront->location.x );
 			break;
 	}		
 
-	if(distancetonextcar< 7)//smaller than 7 meters abs distace to car1
-	{				
-		car2->speed-=DECEL; //slow down
+	if(distancetonextcar< 7)//smaller than 7 meters abs distace to carInFront
+	{
+		currentCar->speed-=DECEL; //slow down
 	}
 	else
 	{
-		car2->speed+=ACCEL;//speed up
+		currentCar->speed+=ACCEL;//speed up
 	}
 		
-	if(car2->speed<0) //can't have negative speed
+	if(currentCar->speed<0) //can't have negative speed
 	{
-		car2->speed=0;
+		currentCar->speed=0;
 	}
-	if (car2->speed>=speedlimit)
+	if (currentCar->speed>=global_speed_limit)//speed limit in kmh
 	{
-		car2->speed=speedlimit;
+		currentCar->speed=global_speed_limit;
 	}
 	
-	switch(current_car_direction)//update position of car2 by adding its speed in m/s
+	switch(current_car_direction)//update position of currentCar by adding its speed in m/s
 	{
 		case UP:
-			car2->location.y-=(car2->speed/3.6);
+			currentCar->location.y-=(currentCar->speed/3.6);
 			break;
 			
 		case DOWN:
-			car2->location.y+=(car2->speed/3.6);
+			currentCar->location.y+=(currentCar->speed/3.6);
 			break;
 			
 		case LEFT:
-			car2->location.x-=(car2->speed/3.6);
+			currentCar->location.x-=(currentCar->speed/3.6);
 			break;
 			
 		case RIGHT:
-			car2->location.x+=(car2->speed/3.6);
+			currentCar->location.x+=(currentCar->speed/3.6);
 			break;
 	}
-	print_car(*car2); //print data about the current car
+
+	print_car(*currentCar); //print data about the current car
 	printf("Current Car Direction: %s\n\n", get_compass_direction_string(current_car_direction));
 }
 
