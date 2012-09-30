@@ -29,7 +29,7 @@ void generatecarplate(char* plate) {
 
 int main() {
 	int i;
-	char* theplate;
+	char theplate[7];
 	// srand((unsigned)time(NULL));//enable for seed which is based on time, else will generate same plates each run
 	
 	for(i=0;i<5;i++) {
