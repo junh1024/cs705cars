@@ -157,6 +157,8 @@ Lane all_lanes[NUM_OF_LANES];
 
 LaneOfCars all_cars[NUM_OF_LANES]; //this array contains all the lane of cars in the simulation
 
+char* old_plates[MAX_CARS_PER_LANE*NUM_OF_LANES]; //this array contains all the plates generated
+
 int actual_num_of_cars = 0; //This is how many cars are currently in the simulation
 
 const float CAR_LENGTH = 40;
