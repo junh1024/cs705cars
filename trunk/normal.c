@@ -1,17 +1,7 @@
-/*
- ============================================================================
- Name        : 705pro.c
- Author      : 
- Version     :
- Copyright   : Your copyright notice
- Description : Hello World in C, Ansi-style
- ============================================================================
- */
-
+//http://www.dreamincode.net/code/snippet1446.htm
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
-#include <string.h>
 
 int deviateAvailable=0;
 float storedDeviate;
@@ -22,9 +12,6 @@ double var2;
 double max_rand=32767;
 
 double randn_notrig(double mu, double sigma) {
-			//	deviate from previous calculation
-
-
 	//	If no deviate has been stored, the polar Box-Muller transformation is
 	//	performed, producing two independent normally-distributed random
 	//	deviates.  One is stored for the next round, and one is returned.
@@ -70,4 +57,5 @@ int main(){
 		k=randn_notrig(0.495,0.24);
 		printf("%f \n",k);
 	}
+	return 0;
 }

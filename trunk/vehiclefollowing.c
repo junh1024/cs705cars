@@ -28,7 +28,7 @@ int main() {
 	
 
 	/* move all cars */
-	int i = 0;
+	// int i = 0;
 	// for (i < actual_num_of_cars; i++)
 	// {
 		// move_one_car(all_cars[i]);
