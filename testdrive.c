@@ -54,6 +54,7 @@ char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
 
 void generatecarplate(char* plate);
+int isItUnique(char* plate)
 
 /*----------End Function Prototypes----------*/
 
@@ -403,8 +404,28 @@ void generatecarplate(char* plate) {
 	plate[i] = h;
 	}
 	plate[6]='\0'; //null character terminator EOS
+  if (isItUnique(plate)==1) {
+    old_plates[actual_num_of_cars]=plate;
+    return;
+  } else {
+    generatecarplate(plate);
+  }
+}
 
-	return;
+int isItUnique(char* plate) {
+  int i,j,check;
+  for (i=0; i<actual_num_of_cars; i++) {
+    check=0;
+    for (j=0; j<6; j++) {
+      if (plate[j]==old_plates[i][j]) {
+        check++;
+      }
+    }
+    if (check==6) {
+      return 0;
+    }
+  }
+  return 1;
 }
 
 //spawnornotdensity
