@@ -54,7 +54,7 @@ char * get_compass_direction_string(Direction direction);
 char * get_point_string(Point point);
 
 void generatecarplate(char* plate);
-int isItUnique(char* plate)
+int isItUnique(char* plate);
 
 /*----------End Function Prototypes----------*/
 
