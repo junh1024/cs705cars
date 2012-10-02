@@ -69,6 +69,7 @@ int main() {
 		update_car_lane(&all_cars[0]); //we are only updating lane0 and lane2
 		update_car_lane(&all_cars[2]);
 	}
+   getchar();
 	return 0;
 }
 
@@ -216,7 +217,7 @@ void update_car_lane(LaneOfCars *current_car_lane) {
 
 void car_following_model(Car *currentCar, Car *carInFront) {
 
-	float speedlimit=global_speed_limit;
+  // float speedlimit=global_speed_limit;
 	float distancetonextcar;
 	//the direction of the lane in which this car is in
 	Direction current_car_direction = all_lanes[currentCar->lane_id].direction;
