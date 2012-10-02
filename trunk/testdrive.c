@@ -241,7 +241,7 @@ void car_following_model(Car *currentCar, Car *carInFront) {
 			break;
 	}		
 
-	if(distancetonextcar< 7)//smaller than 7 meters abs distace to carInFront
+	if(distancetonextcar< 47)//smaller than 7 meters abs distace to carInFront
 	{
 		currentCar->speed-=DECEL; //slow down
 	}
