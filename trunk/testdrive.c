@@ -388,7 +388,7 @@ void copy_car_to_new_lane(int current_lane_id, int next_lane_id) {
 }
 
 /*============================ UTILITY FUNCTIONS ===============================*/
-//this function generates a gar plate on the given char pointer
+//this function generates a car plate on the given char pointer
 void generatecarplate(char* plate) {
 	char letters[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	int i,j; //temp variables
