@@ -69,7 +69,7 @@ int main() {
 		update_car_lane(&all_cars[0]); //we are only updating lane0 and lane2
 		update_car_lane(&all_cars[2]);
 	}
-   getchar();
+   // getchar();
 	return 0;
 }
 
